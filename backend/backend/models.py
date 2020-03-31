@@ -74,8 +74,6 @@ class Shop(models.Model):
     ShopID = models.AutoField(db_column='ShopID', primary_key=True)  # Field Name made lowercase.
     ShopTypeID = models.ForeignKey('ShopType', models.DO_NOTHING, db_column='ShopTypeID')  # Field Name made lowercase.
     ShopName = models.CharField(db_column='ShopName', max_length=45)  # Field Name made lowercase.
-    Shoplatitude = models.DecimalField(db_column='ShopLatitude', max_digits=10, decimal_places=8)  # Field Name made lowercase.
-    Shoplongitude = models.DecimalField(db_column='ShopLongitude', max_digits=11, decimal_places=8)  # Field Name made lowercase.
 
     class Meta:
         db_table = 'Shop'
