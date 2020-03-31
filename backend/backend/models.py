@@ -24,17 +24,17 @@ class Category(models.Model):
         db_table = 'Category'
 
 
-class Order(models.Model):
+class PastOrder(models.Model):
     OrderID = models.AutoField(db_column='OrderID', primary_key=True)  # Field Name made lowercase.
     UserID = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field Name made lowercase.
     OrderDelivered = models.BooleanField(db_column='OrderDelivered')  # Field Name made lowercase.
     OrderTimestamp = models.DateTimeField(auto_now_add=True)
     class Meta:
-        db_table = 'Order'
+        db_table = 'PastOrder'
 
 class OrderItems(models.Model):
     OrderItemID = models.AutoField(db_column='OrderItemID', primary_key=True)  # Field Name made lowercase.
-    OrderID = models.ForeignKey(Order, models.DO_NOTHING, db_column='OrderID', blank=True, null=True)  # Field Name made lowercase.
+    OrderID = models.ForeignKey(PastOrder, models.DO_NOTHING, db_column='OrderID', blank=True, null=True)  # Field Name made lowercase.
     ProductID = models.ForeignKey('Product', models.DO_NOTHING, db_column='ProductID', blank=True, null=True)  # Field Name made lowercase.
     Quantity = models.DecimalField(db_column='Quantity', max_digits=4, decimal_places=2, blank=True, null=True)  # Field Name made lowercase.
     Notes = models.CharField(max_length=255, blank=True, null=True)
