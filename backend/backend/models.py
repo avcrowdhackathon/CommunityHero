@@ -15,14 +15,12 @@ class Brand(models.Model):
     class Meta:
         db_table = 'Brand'
 
-
 class Category(models.Model):
     CategoryID = models.AutoField(db_column='CategoryID', primary_key=True)  # Field Name made lowercase.
     CategoryName = models.CharField(db_column='CategoryName', max_length=45)  # Field Name made lowercase.
 
     class Meta:
         db_table = 'Category'
-
 
 class PastOrder(models.Model):
     OrderID = models.AutoField(db_column='OrderID', primary_key=True)  # Field Name made lowercase.
@@ -35,7 +33,7 @@ class PastOrder(models.Model):
 class OrderItems(models.Model):
     OrderItemID = models.AutoField(db_column='OrderItemID', primary_key=True)  # Field Name made lowercase.
     OrderID = models.ForeignKey(PastOrder, models.DO_NOTHING, db_column='OrderID', blank=True, null=True)  # Field Name made lowercase.
-    ProductID = models.ForeignKey('Product', models.DO_NOTHING, db_column='ProductID', blank=True, null=True)  # Field Name made lowercase.
+    PriceID = models.ForeignKey('Price', models.DO_NOTHING, db_column='PriceID', blank=True, null=True)  # Field Name made lowercase.
     Quantity = models.DecimalField(db_column='Quantity', max_digits=4, decimal_places=2, blank=True, null=True)  # Field Name made lowercase.
     Notes = models.CharField(max_length=255, blank=True, null=True)
     class Meta:
@@ -87,7 +85,7 @@ class ShopType(models.Model):
 
 class ShoppingItem(models.Model):
     UserID = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field Name made lowercase.
-    ProductID = models.ForeignKey(Product, models.DO_NOTHING, db_column='ProductID')  # Field Name made lowercase.
+    PriceID = models.ForeignKey(Price, models.DO_NOTHING, db_column='PriceID')  # Field Name made lowercase.
     Quantity = models.DecimalField(db_column='Quantity', max_digits=4, decimal_places=2, blank=True, null=True)  # Field Name made lowercase.
     ShoppingItemID = models.AutoField(db_column='ShoppingItemID', primary_key=True)  # Field Name made lowercase.
     Notes = models.CharField(max_length=255, blank=True, null=True)
