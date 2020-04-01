@@ -15,7 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url
+import backend.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # api
+    url(r'^api/v1/categories/$', backend.views.category_collection),
+    url(r'^api/v1/categories/(?P<pk>[0-9]+)$', backend.views.category_element),
+    url(r'^api/v1/producttypes/$', backend.views.producttype_collection),
+    url(r'^api/v1/producttypes/(?P<pk>[0-9]+)$', backend.views.producttype_element),
+    url(r'^api/v1/producttypes/search/(?P<name>\w{1,30})$', backend.views.producttype_name),
 ]
