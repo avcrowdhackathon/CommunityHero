@@ -13,3 +13,14 @@ class ProductTypeSerializer(serializers.ModelSerializer):
         fields = ('ProductTypeID', 'ProductTypeName', 'CategoryID')
         depth = 2
 
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ('ProductID', 'ProductName', 'ProductTypeID', 'ProductBrandID', 'ProductQuantity', 'ProductUnit', 'ProductBarcode')
+        depth = 2
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PastOrder
+        fields = ('OrderID', 'UserID')
+        depth = 2

@@ -26,4 +26,8 @@ urlpatterns = [
     url(r'^api/v1/producttypes/$', backend.views.producttype_collection),
     url(r'^api/v1/producttypes/(?P<pk>[0-9]+)$', backend.views.producttype_element),
     url(r'^api/v1/producttypes/search/(?P<name>\w{1,30})$', backend.views.producttype_name),
+    url(r'^api/v1/products/name/(?P<name>\w{1,30})$', backend.views.product_name),
+    url(r'^api/v1/products/barcode/$', backend.views.product_barcode),
+    url(r'^api/v1/products/(?P<pk>[0-9]+)$', backend.views.product_element),
+    url(r'^api/v1/users/geo/', backend.views.user_radius),
 ]
