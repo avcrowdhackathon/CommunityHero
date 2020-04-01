@@ -1,2 +1,2 @@
-release: python manage.py migrate --noinput
+release: python backend/manage.py migrate --noinput
 web: gunicorn --chdir backend/ backend.wsgi
