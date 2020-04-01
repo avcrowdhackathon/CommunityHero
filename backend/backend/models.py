@@ -62,7 +62,7 @@ class Product(models.Model):
 
 class ProductType(models.Model):
     ProductTypeID = models.AutoField(db_column='ProductTypeID', primary_key=True)  # Field Name made lowercase.
-    ProductTypeName = models.CharField(db_column='ProductTypeName', max_length=45)  # Field Name made lowercase.
+    ProductTypeName = models.CharField(db_column='ProductTypeName', max_length=45, unique=True)  # Field Name made lowercase.
     CategoryID = models.ForeignKey(Category, models.DO_NOTHING, db_column='CategoryID', blank=True, null=True)  # Field Name made lowercase.
 
     class Meta:
