@@ -102,3 +102,9 @@ class User(models.Model):
 
     class Meta:
         db_table = 'User'
+
+class Search(models.Model):
+    SearchID = models.AutoField(primary_key=True)
+    SearchTerm = models.CharField(max_length=50)
+    UserID = models.ForeignKey(User, models.CASCADE)
+    SearchTimestamp = models.DateTimeField(auto_now_add=True)
