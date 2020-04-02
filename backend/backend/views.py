@@ -119,3 +119,11 @@ def user_radius(request):
 
 		serializer = OrderSerializer(result_users, many=True)
 		return Response(serializer.data)
+
+@api_view(['GET'])
+def order_by_id(request):
+	if request.method == 'GET':
+		oid = int(request.query_params['orderId'])
+		orders = OrderItems.objects.filter(OrderID=oid)
+		serializer = OrderItemSerializer(orders, many=True)
+		return Response(serializer.data)
