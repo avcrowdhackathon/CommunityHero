@@ -15,9 +15,20 @@ class CategoryAdmin(admin.ModelAdmin):
     model = ProductType
     list_display = ['CategoryID', 'CategoryName']
 
+class PriceAdmin(admin.ModelAdmin):
+    model = Price
+    list_display = ['PriceID', 'ProductID', 'ShopID']
+
+class ProductAdmin(admin.ModelAdmin):
+    model = Product
+    list_display = ['ProductID', 'ProductTypeID', 'ProductName', 'ProductQuantity', 'ProductBarcode']
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(ProductType, ProductTypeAdmin)
 admin.site.register(Shop)
 admin.site.register(ShopType)
 admin.site.register(PastOrder)
 admin.site.register(OrderItems)
+admin.site.register(Price, PriceAdmin)
+admin.site.register(Product, ProductAdmin)
