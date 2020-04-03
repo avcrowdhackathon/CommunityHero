@@ -31,12 +31,17 @@ class PastOrderAdmin(admin.ModelAdmin):
     model = User
     list_display = ["OrderID", "UserID", "OrderDelivered"]
 
+class OrderItemsAdmin(admin.ModelAdmin):
+    model = User
+    list_display = ["OrderItemID", "OrderID", "PriceID", "Notes", "Quantity"]
+
+
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(ProductType, ProductTypeAdmin)
 admin.site.register(Shop)
 admin.site.register(ShopType)
 admin.site.register(PastOrder, PastOrderAdmin)
-admin.site.register(OrderItems)
+admin.site.register(OrderItems, OrderItemsAdmin)
 admin.site.register(Price, PriceAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(User, UserAdmin)
