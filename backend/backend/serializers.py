@@ -24,3 +24,9 @@ class OrderSerializer(serializers.ModelSerializer):
         model = PastOrder
         fields = ('OrderID', 'UserID')
         depth = 2
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItems
+        fields = ('OrderID', 'PriceID', 'Quantity', 'Notes')
+        depth = 2
