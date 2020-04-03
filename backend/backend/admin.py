@@ -23,6 +23,10 @@ class ProductAdmin(admin.ModelAdmin):
     model = Product
     list_display = ['ProductID', 'ProductTypeID', 'ProductName', 'ProductQuantity', 'ProductBarcode']
 
+class UserAdmin(admin.ModelAdmin):
+    model = User
+    list_display = ["UserID", "UserName", "Userphonenumber"]
+
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(ProductType, ProductTypeAdmin)
@@ -32,3 +36,4 @@ admin.site.register(PastOrder)
 admin.site.register(OrderItems)
 admin.site.register(Price, PriceAdmin)
 admin.site.register(Product, ProductAdmin)
+admin.site.register(User, UserAdmin)

@@ -17,7 +17,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ('ProductID', 'ProductName', 'ProductTypeID', 'ProductBrandID', 'ProductQuantity', 'ProductUnit', 'ProductBarcode')
-        depth = 2
+        depth = 3
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,4 +29,4 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItems
         fields = ('OrderID', 'PriceID', 'Quantity', 'Notes')
-        depth = 2
+        depth = 3
