@@ -27,12 +27,15 @@ class UserAdmin(admin.ModelAdmin):
     model = User
     list_display = ["UserID", "UserName", "Userphonenumber"]
 
+class PastOrderAdmin(admin.ModelAdmin):
+    model = User
+    list_display = ["OrderID", "UserID", "OrderDelivered"]
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(ProductType, ProductTypeAdmin)
 admin.site.register(Shop)
 admin.site.register(ShopType)
-admin.site.register(PastOrder)
+admin.site.register(PastOrder, PastOrderAdmin)
 admin.site.register(OrderItems)
 admin.site.register(Price, PriceAdmin)
 admin.site.register(Product, ProductAdmin)

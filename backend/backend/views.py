@@ -175,3 +175,13 @@ def create_data(request):
 			
 		
 		return Response("Done")
+
+
+@api_view(['POST'])
+def deliver_order(request, order):
+	if request.method == 'POST':
+		print(request.data)
+		obj = PastOrder.objects.get(OrderID=order)
+		obj.OrderDelivered = True
+		obj.save()
+		return Response("Done")
