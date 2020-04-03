@@ -5,6 +5,9 @@ from rest_framework.response import Response
 from backend.models import *
 from backend.serializers import *
 from django.db.models import Q
+import numpy as np
+import random
+import names
 
 from math import radians, cos, sin, asin, sqrt 
 def distance(lat1, lon1, lat2, lon2): 
@@ -127,3 +130,58 @@ def order_by_id(request):
 		orders = OrderItems.objects.filter(OrderID=oid)
 		serializer = OrderItemSerializer(orders, many=True)
 		return Response(serializer.data)
+
+@api_view(['GET'])
+def create_data(request):
+	if request.method == 'GET':
+		probability = 0.8
+		mean_price = 4
+		stdev = 1
+		shops = Shop.objects.filter(ShopTypeID=1)
+		products = Product.objects.all()
+		for shop in shops:
+			for product in products:
+				if product.ProductTypeID.ProductTypeID in [8,9,10,37]:
+					print(shop, product)
+					if random.random() < probability:
+						print('saving')
+						price = Price(ShopID=shop, ProductID=product, Price=np.random.normal(mean_price, stdev))
+						price.save()
+
+		num_users = 100
+
+		for j in range(num_users):
+			phonenumber = '99' + ''.join(random.choice("0123456789") for _ in range(6))
+			username = names.get_first_name()
+			print(phonenumber, username)
+			user = User(Userlatitude=np.random.normal(35.15938300, 0.1), Userlongitude=np.random.normal(33.39632500, 0.1), Userphonenumber=phonenumber, UserName=username)
+			user.save()
+
+		users = User.objects.all()
+		for user in users:
+			if len(PastOrder.objects.filter(UserID=user.UserID, OrderDelivered=False))>0:
+				continue
+			shop = random.choice(Shop.objects.all())
+			available_items = Price.objects.all().filter(ShopID=shop.ShopID)
+			num_of_items = random.randint(1, len(available_items)-1)
+
+			items = random.sample(list(available_items), num_of_items)
+			
+			order = PastOrder(UserID=user, OrderDelivered=False)
+			order.save()
+			for item in items:
+				order_item = OrderItems(OrderID=order, PriceID=item, Quantity=random.randint(1, 5))
+				order_item.save()
+			
+		
+		return Response("Done")
+
+
+@api_view(['POST'])
+def deliver_order(request, order):
+	if request.method == 'POST':
+		print(request.data)
+		obj = PastOrder.objects.get(OrderID=order)
+		obj.OrderDelivered = True
+		obj.save()
+		return Response("Done")
