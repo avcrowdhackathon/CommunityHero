@@ -78,15 +78,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#        'NAME': 'panwise',
-#        'USER': os.environ.get('PGUSER'),
-#        'PASSWORD': os.environ.get('PGPASS'),
-#        'HOST': 'localhost'
-#    }
-#}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'panwise',
+        'USER': os.environ.get('PGUSER'),
+        'PASSWORD': os.environ.get('PGPASS'),
+        'HOST': 'localhost'
+    }
+}
 
 
 # Password validation

@@ -31,4 +31,5 @@ urlpatterns = [
     url(r'^api/v1/products/(?P<pk>[0-9]+)$', backend.views.product_element),
     url(r'^api/v1/users/geo/', backend.views.user_radius),
     url(r'^api/v1/orders/', backend.views.order_by_id),
+    url(r'^api/create', backend.views.create_data),
 ]
