@@ -4,6 +4,7 @@ Django==3.0.4
 django-cors-headers==3.2.1
 django-heroku==0.3.1
 djangorestframework==3.11.0
+editdistance==0.5.3
 gunicorn==20.0.4
 mysqlclient==1.4.6
 names==0.3.0

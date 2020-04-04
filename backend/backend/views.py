@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.template import loader
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from backend.models import *
@@ -8,6 +9,9 @@ from django.db.models import Q
 import numpy as np
 import random
 import names
+import json
+import decimal
+import nltk
 
 from math import radians, cos, sin, asin, sqrt 
 def distance(lat1, lon1, lat2, lon2): 
@@ -185,3 +189,67 @@ def deliver_order(request, order):
 		obj.OrderDelivered = True
 		obj.save()
 		return Response("Done")
+
+@api_view(['POST'])
+def sms_order(request):
+	if request.method == 'POST':
+		names = ProductType.objects.all()
+		b = request.data
+		print(b["from"])
+		resp = {}
+		print(b["content"])
+		try:
+			user = User.objects.get(Userphonenumber=b['from'])
+		except User.DoesNotExist:
+			resp["status"]="user_error"
+			return JsonResponse(resp)
+		neworder = PastOrder(UserID=user)
+		neworder.save()
+		items = []
+		totalCost = 0
+		for product in b["content"].split('\n'):
+			product = product.lower()
+			mindist = 100000000000
+			for p in Product.objects.all():
+				if decimal.Decimal(nltk.jaccard_distance(set(nltk.ngrams(product, n=3)), set(nltk.ngrams(p.ProductTypeID.ProductTypeName.lower(), n=3)).union(set(nltk.ngrams(p.ProductName.lower(), n=3))).union(set(nltk.ngrams(p.ProductBrandID.BrandName.lower(), n=3)))))/(p.ProductWeight) < mindist:
+					mindist = decimal.Decimal(nltk.jaccard_distance(set(nltk.ngrams(product, n=3)), set(nltk.ngrams(p.ProductTypeID.ProductTypeName.lower(), n=3)).union(set(nltk.ngrams(p.ProductName.lower(), n=3))).union(set(nltk.ngrams(p.ProductBrandID.BrandName.lower(), n=3)))))/p.ProductWeight
+					mindistproduct = p
+
+			print(mindistproduct.ProductName, mindist)
+			print(Price.objects.filter(ProductID=mindistproduct).order_by('Price')[0])
+			# TODO: Return cheapest/closest combination
+			if mindist<0.95:
+				items.append(mindistproduct.ProductBrandID.BrandName + ' ' + mindistproduct.ProductName)
+				price = Price.objects.filter(ProductID=mindistproduct).order_by('Price')[0]
+				totalCost+=price.Price
+				item = OrderItems(OrderID=neworder, PriceID=price, Quantity=1)
+				item.save()
+			else:
+				items.append('not found')
+			
+		resp = {}
+		resp["items"] = items
+		resp["cost"] = totalCost
+		resp["status"]="ok"
+		print(resp)
+		return JsonResponse(resp)
+
+@api_view(['POST'])
+def sms_register(request):
+	if request.method == 'POST':
+		b = json.loads(request.body.decode('utf-8'))
+		u = User(Userphonenumber=b["from"], Userlatitude=float(b['lat']), Userlongitude=float(b['lng']))
+		u.save()
+		return Response("Done")
+
+@api_view(['GET'])
+def download_products(request, shop):
+    # Create the HttpResponse object with the appropriate CSV header.
+	response = HttpResponse(content_type='text/csv')
+	response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+	b = Price.objects.filter(ShopID=shop)
+	
+	t = loader.get_template('csv.txt')
+	c = {'data': b}
+	response.write(t.render(c))
+	return response

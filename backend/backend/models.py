@@ -25,7 +25,7 @@ class Category(models.Model):
 class PastOrder(models.Model):
     OrderID = models.AutoField(db_column='OrderID', primary_key=True)  # Field Name made lowercase.
     UserID = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field Name made lowercase.
-    OrderDelivered = models.BooleanField(db_column='OrderDelivered')  # Field Name made lowercase.
+    OrderDelivered = models.BooleanField(db_column='OrderDelivered', default=False)  # Field Name made lowercase.
     OrderTimestamp = models.DateTimeField(auto_now_add=True)
     class Meta:
         db_table = 'PastOrder'
@@ -56,7 +56,7 @@ class Product(models.Model):
     ProductQuantity = models.FloatField(db_column='ProductQuantity', blank=True, null=True)  # Field Name made lowercase.
     ProductUnit = models.CharField(db_column='ProductUnit', max_length=10, blank=True, null=True)  # Field Name made lowercase.
     ProductBarcode = models.CharField(db_column='ProductBarcode', max_length=18, blank=True, null=True)  # Field Name made lowercase.
-
+    ProductWeight = models.DecimalField(null=False, default=1.0, decimal_places=2, max_digits=3)
     class Meta:
         db_table = 'Product'
 
@@ -96,7 +96,7 @@ class ShoppingItem(models.Model):
 class User(models.Model):
     UserID = models.AutoField(db_column='UserID', primary_key=True)  # Field Name made lowercase.
     UserName = models.CharField(db_column='UserName', max_length=45, blank=True, null=True)  # Field Name made lowercase.
-    Userphonenumber = models.CharField(db_column='UserPhoneNumber', max_length=15, blank=True, null=True)  # Field Name made lowercase.
+    Userphonenumber = models.CharField(db_column='UserPhoneNumber', max_length=15, blank=True, null=False, unique=True)  # Field Name made lowercase.
     Userlatitude = models.DecimalField(db_column='UserLatitude', max_digits=10, decimal_places=8, blank=True, null=True)  # Field Name made lowercase.
     Userlongitude = models.DecimalField(db_column='UserLongitude', max_digits=11, decimal_places=8, blank=True, null=True)  # Field Name made lowercase.
 

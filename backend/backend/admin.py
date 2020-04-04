@@ -21,7 +21,7 @@ class PriceAdmin(admin.ModelAdmin):
 
 class ProductAdmin(admin.ModelAdmin):
     model = Product
-    list_display = ['ProductID', 'ProductTypeID', 'ProductName', 'ProductQuantity', 'ProductBarcode']
+    list_display = ['ProductID', 'ProductTypeID', 'ProductName', 'ProductQuantity', 'ProductBarcode', 'ProductWeight']
 
 class UserAdmin(admin.ModelAdmin):
     model = User
