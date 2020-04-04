@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.template import loader
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from backend.models import *
@@ -8,6 +9,8 @@ from django.db.models import Q
 import numpy as np
 import random
 import names
+import editdistance
+import json
 
 from math import radians, cos, sin, asin, sqrt 
 def distance(lat1, lon1, lat2, lon2): 
@@ -185,3 +188,57 @@ def deliver_order(request, order):
 		obj.OrderDelivered = True
 		obj.save()
 		return Response("Done")
+
+@api_view(['POST'])
+def sms_order(request):
+	if request.method == 'POST':
+		names = ProductType.objects.all()
+		b = request.data
+		print(b["from"])
+		print(b["content"])
+		try:
+			user = User.objects.get(Userphonenumber=b['from'])
+		except User.DoesNotExist:
+			return Response("User does not exist")
+		neworder = PastOrder(UserID=user)
+		neworder.save()
+		for product in b["content"]:
+			mindist = 100000000000
+			for p in names:
+				if editdistance(product, p['ProductTypeName'])<mindist:
+					mindist = editdistance(product, p['ProductTypeName'])
+					mindistproduct = p
+			mindist = 10000000
+			print(mindistproduct)
+			for p in Product.objects.filter(ProducyTypeID=mindistproduct):
+				if editdistance(product, p['ProductName'])<mindist:
+					mindist = editdistance(product, p['ProductTypeName'])
+					mindistproduct = p
+			print(mindistproduct)
+		item = OrderItems(OrderID=neworder, PriceID=Price.objects.filter(ProductID=mindistproduct).order_by('Price')[0], Quantity=1)
+		item.save()
+
+				
+
+
+		return Response("Done")
+
+@api_view(['POST'])
+def sms_register(request):
+	if request.method == 'POST':
+		b = json.loads(request.body.decode('utf-8'))
+		u = User(Userphonenumber=b["from"], Userlatitude=float(b['lat']), Userlongitude=float(b['lng']))
+		u.save()
+		return Response("Done")
+
+@api_view(['GET'])
+def download_products(request, shop):
+    # Create the HttpResponse object with the appropriate CSV header.
+	response = HttpResponse(content_type='text/csv')
+	response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
+	b = Price.objects.filter(ShopID=shop)
+	
+	t = loader.get_template('csv.txt')
+	c = {'data': b}
+	response.write(t.render(c))
+	return response

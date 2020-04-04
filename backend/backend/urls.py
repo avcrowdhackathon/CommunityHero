@@ -33,4 +33,7 @@ urlpatterns = [
     url(r'^api/v1/orders/$', backend.views.order_by_id),
     url(r'^api/create', backend.views.create_data),
     url(r'^api/v1/orders/deliver/(?P<order>[0-9]+)$', backend.views.deliver_order),
+    url(r'^api/v1/sms/order/$', backend.views.sms_order),
+    url(r'^api/v1/sms/register/$', backend.views.sms_register),
+    url(r'^api/download_products/(?P<shop>[0-9]+)$', backend.views.download_products),
 ]
