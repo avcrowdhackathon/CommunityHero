@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -9,8 +9,9 @@ from django.db.models import Q
 import numpy as np
 import random
 import names
-import editdistance
 import json
+import decimal
+import nltk
 
 from math import radians, cos, sin, asin, sqrt 
 def distance(lat1, lon1, lat2, lon2): 
@@ -195,33 +196,43 @@ def sms_order(request):
 		names = ProductType.objects.all()
 		b = request.data
 		print(b["from"])
+		resp = {}
 		print(b["content"])
 		try:
 			user = User.objects.get(Userphonenumber=b['from'])
 		except User.DoesNotExist:
-			return Response("User does not exist")
+			resp["status"]="user_error"
+			return JsonResponse(resp)
 		neworder = PastOrder(UserID=user)
 		neworder.save()
-		for product in b["content"]:
+		items = []
+		totalCost = 0
+		for product in b["content"].split('\n'):
+			product = product.lower()
 			mindist = 100000000000
-			for p in names:
-				if editdistance(product, p['ProductTypeName'])<mindist:
-					mindist = editdistance(product, p['ProductTypeName'])
+			for p in Product.objects.all():
+				if decimal.Decimal(nltk.jaccard_distance(set(nltk.ngrams(product, n=3)), set(nltk.ngrams(p.ProductTypeID.ProductTypeName.lower(), n=3)).union(set(nltk.ngrams(p.ProductName.lower(), n=3))).union(set(nltk.ngrams(p.ProductBrandID.BrandName.lower(), n=3)))))/(p.ProductWeight) < mindist:
+					mindist = decimal.Decimal(nltk.jaccard_distance(set(nltk.ngrams(product, n=3)), set(nltk.ngrams(p.ProductTypeID.ProductTypeName.lower(), n=3)).union(set(nltk.ngrams(p.ProductName.lower(), n=3))).union(set(nltk.ngrams(p.ProductBrandID.BrandName.lower(), n=3)))))/p.ProductWeight
 					mindistproduct = p
-			mindist = 10000000
-			print(mindistproduct)
-			for p in Product.objects.filter(ProducyTypeID=mindistproduct):
-				if editdistance(product, p['ProductName'])<mindist:
-					mindist = editdistance(product, p['ProductTypeName'])
-					mindistproduct = p
-			print(mindistproduct)
-		item = OrderItems(OrderID=neworder, PriceID=Price.objects.filter(ProductID=mindistproduct).order_by('Price')[0], Quantity=1)
-		item.save()
 
-				
-
-
-		return Response("Done")
+			print(mindistproduct.ProductName, mindist)
+			print(Price.objects.filter(ProductID=mindistproduct).order_by('Price')[0])
+			# TODO: Return cheapest/closest combination
+			if mindist<0.95:
+				items.append(mindistproduct.ProductBrandID.BrandName + ' ' + mindistproduct.ProductName)
+				price = Price.objects.filter(ProductID=mindistproduct).order_by('Price')[0]
+				totalCost+=price.Price
+				item = OrderItems(OrderID=neworder, PriceID=price, Quantity=1)
+				item.save()
+			else:
+				items.append('not found')
+			
+		resp = {}
+		resp["items"] = items
+		resp["cost"] = totalCost
+		resp["status"]="ok"
+		print(resp)
+		return JsonResponse(resp)
 
 @api_view(['POST'])
 def sms_register(request):

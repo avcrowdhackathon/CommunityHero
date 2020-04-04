@@ -56,7 +56,7 @@ class Product(models.Model):
     ProductQuantity = models.FloatField(db_column='ProductQuantity', blank=True, null=True)  # Field Name made lowercase.
     ProductUnit = models.CharField(db_column='ProductUnit', max_length=10, blank=True, null=True)  # Field Name made lowercase.
     ProductBarcode = models.CharField(db_column='ProductBarcode', max_length=18, blank=True, null=True)  # Field Name made lowercase.
-
+    ProductWeight = models.DecimalField(null=False, default=1.0, decimal_places=2, max_digits=3)
     class Meta:
         db_table = 'Product'
 
