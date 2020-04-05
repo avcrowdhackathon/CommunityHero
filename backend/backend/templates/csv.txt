@@ -1,3 +1,0 @@
-"ID", "Name", "Regular Price", "Categories", "Tags (vallo to brandname dame)"
-{% for row in data %}
-"{{ row.ProductID.ProductID}}", "{{row.ProductID.ProductBrandID.BrandName}} {{row.ProductID.ProductName}}", "{{ row.Price }}", "{{ row.ProductID.ProductTypeID.CategoryID.CategoryName|addslashes }} > {{ row.ProductID.ProductTypeID.ProductTypeName|addslashes }}", "{{ row.ProductID.ProductBrandID.BrandName }}"{% endfor %}
