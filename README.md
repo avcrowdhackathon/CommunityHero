@@ -1,4 +1,4 @@
-# CommunityHero
+# CommunityHero ([https://communityhero.live](https://communityhero.live))
 
 ## Inspiration
 
