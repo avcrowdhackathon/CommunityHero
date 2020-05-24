@@ -28,7 +28,6 @@ We hope to start small, within our local community, hyperfocusing on our target 
 
 Future plans:
 
-   - Make the Messenger bot graphical (include pictures of products)
    - Arrange meetings with supermarkets so that we can integrate them into our platform and build a dataset with real products and prices
    - Make the order choose the least price depending on the number of supermarkets
    - Improve search results for orders from SMS by using more advanced NLP algorithms & Machine Learning when we have more data from past queries
